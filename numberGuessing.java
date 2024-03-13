@@ -1,88 +1,59 @@
 import java.util.Random;
 import java.util.Scanner;
 
-class numberGuessing
-{
- private static int genrateRandomNumber(int high,int low)
- {
-  
-    Random random =new Random();     
-   //random function generate random number based high - low and adding 1 for limit+1 also adding low to the random number for make sure the lower bound of the number 
-    int number=random.nextInt(high - low + 1)+low ;
-    return number;
-    
-   
- }
- public static void main(String[] args) throws Exception
- {
-  Scanner sc =new Scanner(System.in);
+class NumberGuessing {
+    private static final int MAX_ATTEMPTS = 8;
 
-  System.out.println("\n\t\t\t\t****__Number Guessing Game__*****");
-  System.out.println("Only 8 attempts will be Provided to find the Number.");
-  System.out.println("Try to Guess less than 8 attempt");
-  
-  System.out.println("Enter the Upper Bound(higher value) of the Guessing Number");
-  int  upperBound=sc.nextInt();
-  
-  System.out.println("Enter the Lower Bound(Lower Value) of the Guessing Number");
-  int lowerBound=sc.nextInt();
- 
- //both upper and lower bound cannot be same and lowerbound cannot be greater than upperbound
-  if(upperBound-lowerBound==0 || lowerBound>upperBound)
-  {
-  System.out.println("Entered Wrong Format");
-  System.exit(2);
-  }
-  
- //generating random number based on the criteria of the user
-  int actualNo=genrateRandomNumber(upperBound,lowerBound);
+    private static int generateRandomNumber(int high, int low) {
+        Random random = new Random();
+        return random.nextInt(high - low + 1) + low;
+    }
 
-  int guessingNo,above,a,below,b;
-  int entry =1;
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
 
-   a=5;
-   b=10;
+        System.out.println("\n\t\t\t\t****__Number Guessing Game__*****");
+        System.out.println("You have " + MAX_ATTEMPTS + " attempts to find the number.");
 
-   above= actualNo - a;
-   below=  actualNo + b;   
- 
-  do
-  {
+        System.out.println("Enter the Upper Bound (higher value) of the Guessing Number:");
+        int upperBound = scanner.nextInt();
 
-   System.out.println("Guess the Number");
-   guessingNo=sc.nextInt();
+        System.out.println("Enter the Lower Bound (lower value) of the Guessing Number:");
+        int lowerBound = scanner.nextInt();
 
-   if(guessingNo < lowerBound || guessingNo> upperBound)
-   {
-    System.out.println("Guess Number above "+lowerBound+ " and Below "+ upperBound );
-    entry++;
-   }
-   else if(guessingNo==actualNo)
-   {
-    System.out.println("You Guessed Correct Number");
-    entry++;
-     break;
-   }
-   else if(guessingNo!=actualNo)
-   {
-   
-  
-    System.out.println("Try above" + above+"and Below" + below);
-    System.out.println("Wrong Guessing,Try again");
-    entry++;
-   } 
-   above++;
-   below--;
-  
-  }while(entry<=8 );
+        if (upperBound <= lowerBound) {
+            System.out.println("Invalid range. Upper bound must be greater than lower bound.");
+            return;
+        }
 
-   if(entry>=5)
-  {
- 	System.out.println("you tried more than 5 times,Start New");
-	System.out.println("The Number  is" + actualNo);
-   } 
-  
-  
- 
- }
+        int actualNumber = generateRandomNumber(upperBound, lowerBound);
+
+        int attempts = 0;
+        int guess;
+
+        while (attempts < MAX_ATTEMPTS) {
+            System.out.println("Guess the Number:");
+            guess = scanner.nextInt();
+            attempts++;
+
+            if (guess < lowerBound || guess > upperBound)
+           {
+                System.out.println("Your guess is out of range. It should be between " + lowerBound + " and " + upperBound);
+            } else if (guess == actualNumber) 
+            {
+                System.out.println("Congratulations! You Guessed the Correct Number in " + attempts + " attempts.");
+                return;
+            } else
+            {
+                System.out.println("Wrong guess. Try again.");
+                if (guess < actualNumber) {
+                    System.out.println("Try guessing a higher number.");
+                } else {
+                    System.out.println("Try guessing a lower number.");
+                }
+            }
+        }
+
+        System.out.println("Sorry, you've used all " + MAX_ATTEMPTS + " attempts. The correct number was: " + actualNumber);
+    }
 }
